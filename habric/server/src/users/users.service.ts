@@ -4,39 +4,60 @@ import { Injectable } from '@nestjs/common';
 import { IUser } from 'src/types/user';
 import { GetUserDto } from './dto/get-user.dto';
 import { DeleteUserDto } from './dto/delete-user.dto';
+import { InjectModel } from '@nestjs/sequelize';
+import { Users } from './users.model';
 
 @Injectable()
 export class UsersService {
-    private readonly users: IUser[] = [{id: 0, name: 'Bot', password: "123"}];
+    constructor(@InjectModel(Users) private usersModel: typeof Users) {}
 
-    getAllUsers(): IUser[] {
-        return this.users
+    getAllUsers(): Promise<IUser[]> {
+        return this.usersModel.findAll()
     }
 
-    getUserById(getUserDto: GetUserDto): IUser {
-        return this.users.find((user) => user.id === getUserDto.id)
+    getUserById(getUserDto: GetUserDto): Promise<IUser> {
+        const id = getUserDto.id
+        return this.usersModel.findOne({
+            where: {
+                id
+            }
+        })
     }
 
-    createUser(createUserDto: CreateUserDto): IUser {
-        const id = this.users.at(-1).id + 1 || 0;
-        const newUser = {id, ...createUserDto}
-        this.users.push(newUser)
-        return newUser
+    createUser(createUserDto: CreateUserDto): Promise<IUser> {
+        return this.usersModel.create(createUserDto)
     }
 
-    deleteUsersById(deleteUserDto: DeleteUserDto): IUser {
-        const userIndex = this.users.findIndex((user) => user.id === deleteUserDto.id)
-        const user = this.users[userIndex]
-        const delUser = this.users.splice(userIndex)
-        return user
+    async deleteUsersById(deleteUserDto: DeleteUserDto): Promise<IUser> {
+        const id = deleteUserDto.id
+        const delUser = await this.usersModel.findOne({
+            where: {
+                id
+            }
+        })
+        await this.usersModel.destroy({
+            where: {
+                id
+            }
+        })
+        return delUser
     }
 
-    updateUserById(updateUserDto: UpdateUserDto): IUser {
-        const userIndex = this.users.findIndex((user) => user.id === updateUserDto.id)
-        const user:IUser = this.users[userIndex]
-        const updatedUser:IUser = {id: user.id, name: updateUserDto.name || user.name, password: updateUserDto.password || user.password}
-        this.users[userIndex] = updatedUser
-        return updatedUser;
+    updateUserById(updateUserDto: UpdateUserDto): Promise<IUser> {
+        const id = updateUserDto.id
+        this.usersModel.update(
+            updateUserDto,
+            {
+                where: {
+                    id
+                }
+            }
+        )
+        return this.usersModel.findOne({
+            where: {
+                id
+            }
+        });
     }
     
 }

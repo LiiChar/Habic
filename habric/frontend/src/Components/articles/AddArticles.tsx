@@ -18,7 +18,7 @@ export const AddArticles = () => {
 
     function publishing(e: React.FormEvent<HTMLButtonElement>) {
         e.preventDefault()
-        addArticles({ author: user.name, name, tags, text: text || '' })
+        addArticles({ author: user.name, name, tags: tags.join(', '), text: text || '' })
         dispatch(setVision(false))
     }
 

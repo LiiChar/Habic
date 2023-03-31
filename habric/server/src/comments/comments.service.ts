@@ -1,42 +1,63 @@
+import { InjectModel } from '@nestjs/sequelize';
 import { UpdateCommemtDto } from './dto/update-comment.dto';
 import { DeleteCommentDto } from './dto/delete-comment.dto';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { GetCommentsDto } from './dto/get-comments.dto';
 import { Injectable } from '@nestjs/common';
 import { IComment } from 'src/types/comment';
+import { Comments } from './comments.model';
 
 @Injectable()
 export class CommentsService {
-    private readonly comments: IComment[] = [{author: 'bot', id: 0, text: '10', to: 12543534523452}]
+    constructor (@InjectModel(Comments) private commentsModel: typeof Comments) {}
 
-    getAllComments(): IComment[] {
-        return this.comments
+    getAllComments(): Promise<IComment[]> {
+        return this.commentsModel.findAll()
     }
 
-    getCommentById(getCommentsDto: GetCommentsDto): IComment {
-        return this.comments.find((comment) => comment.id === getCommentsDto.id)
+    getCommentById(getCommentsDto: GetCommentsDto): Promise<IComment> {
+        const id = getCommentsDto.id
+        return this.commentsModel.findOne({
+            where: {
+                id
+            }
+        })
     }
 
-    createComment(createcommentDto: CreateCommentDto): IComment {
-        const id = this.comments.at(-1).id + 1 || 0;
-        const newcomment = {id, ...createcommentDto}
-        this.comments.push(newcomment)
-        return newcomment
+    createComment(createcommentDto: CreateCommentDto): Promise<IComment> {
+        return this.commentsModel.create(createcommentDto)
     }
 
-    deleteCommentById(deletecommentDto: DeleteCommentDto): IComment {
-        const commentIndex = this.comments.findIndex((comment) => comment.id === deletecommentDto.id)
-        const comment = this.comments[commentIndex]
-        const delComment = this.comments.splice(commentIndex)
-        return comment
+    async deleteCommentById(deletecommentDto: DeleteCommentDto): Promise<IComment> {
+        const id = deletecommentDto.id
+        const delComment = await this.commentsModel.findOne({
+            where: {
+                id
+            }
+        })
+        await this.commentsModel.destroy({
+            where: {
+                id
+            }
+        })
+        return delComment
     }
 
-    updateCommentById(updatecommentDto: UpdateCommemtDto): IComment {
-        const commentIndex = this.comments.findIndex((comment) => comment.id === updatecommentDto.id)
-        const comment:IComment = this.comments[commentIndex]
-        const updatedcomment:IComment = {id: comment.id, author: updatecommentDto.author || comment.author, text: updatecommentDto.text || comment.text, to: updatecommentDto.to ||  comment.to }
-        this.comments[commentIndex] = updatedcomment
-        return comment
+    updateCommentById(updatecommentDto: UpdateCommemtDto): Promise<IComment> {
+        const id = updatecommentDto.id
+        this.commentsModel.update(
+            updatecommentDto,
+            {
+                where: {
+                    id
+                }
+            }
+        )
+        return this.commentsModel.findOne({
+            where: {
+                id
+            }
+        })
     }
 }
 

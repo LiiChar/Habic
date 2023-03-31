@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import {  useFetchAllUsersQuery, useCreateUsersMutation, IAddUser } from '../../Store/Slices/userSlice';
 
 export const Registration = () => {
-  const [name, setName] = React.useState<string>('')
+  const [username, setUsername] = React.useState<string>('')
   const [password, setPassword] = React.useState<string>('')
   const [isExistUser, setIsExistUser] = React.useState<boolean>(true)
   const navigate = useNavigate()
@@ -12,9 +12,9 @@ export const Registration = () => {
   const [createUsers, {isSuccess}] = useCreateUsersMutation()
 
   function setLogin() {
-    const thisUser = users?.find((user) => user.name === name && user.password === password)
+    const thisUser = users?.find((user) => user.username === username && user.password === password)
     if (!thisUser) {
-      const users = {name: name, password: password}
+      const users = {username: username, password: password}
       createUsers(users)
       if (isSuccess ) {
         navigate('/login')
@@ -35,7 +35,7 @@ export const Registration = () => {
           </div>
           <div>
             <div className='text-xs'>Логин</div>
-            <input type="text" style={{ border: '1px solid blue', borderRadius: '4px' }} className='outline-none mb-3 w-full' value={name} onChange={(e) => setName(e.target.value)} />
+            <input type="text" style={{ border: '1px solid blue', borderRadius: '4px' }} className='outline-none mb-3 w-full' value={username} onChange={(e) => setUsername(e.target.value)} />
           </div>
           <div>
             <div className='text-xs'>Пароль</div>

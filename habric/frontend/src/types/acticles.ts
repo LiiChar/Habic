@@ -5,7 +5,7 @@ export interface IActicles {
     name: string;
     watcher: number;
     image: string;
-    tags: string[];
+    tags: string;
 } 
 
 export interface IComment {
@@ -13,11 +13,10 @@ export interface IComment {
     author: string;
     to?: number;
     text: string;
-    slay: number;
 }
 
 export interface IUser {
     id: number;
-    name: string;
+    username: string;
     password: string;
 }

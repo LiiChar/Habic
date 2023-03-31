@@ -12,7 +12,7 @@ export const Article: React.FC<IPropsArticle> = (props) => {
       <div className='m-4'>
         <div>{props.article.author}</div>
         <div className='my-2 text-lg'><b><Link to={'artic/' + props.article.id}>{props.article.name}</Link></b></div>
-        <div className='text-xs mb-2'>{props.article.tags.join(' ')}</div>
+        <div className='text-xs mb-2'>{props.article.tags}</div>
         <div>
           {props.article.text?.slice(0, props.article.text?.slice(0, 1000).lastIndexOf('.') + 1)}
         </div>

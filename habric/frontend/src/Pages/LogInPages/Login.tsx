@@ -16,10 +16,11 @@ export const Login = () => {
   
   
   function setLogin() {
-    const thisUser = users?.find((user) => user.name === name && user.password === String(password))
+    const thisUser = users?.find((user) => user.username === name && user.password === String(password))
     console.log(thisUser);
     if (thisUser) {
       dispatch(setUser({ id: thisUser.id, name }))
+      sessionStorage.setItem('user', JSON.stringify({id: thisUser.id, name}));
       navigate('/')
     } else {
       setIsExistUser(false)

@@ -13,30 +13,28 @@ export class ArticlesController {
 
     @Get()
     async getAllArticles(): Promise<IActicles[]> {
-        return this.articlesService.getAllArticles()
+        return await this.articlesService.getAllArticles()
     }
 
     @Get(':id')
     async getArticle(@Body() getCommentDto: getArticleDto): Promise<IActicles> {
-        return this.articlesService.getArticlesById(getCommentDto)
+        return await this.articlesService.getArticlesById(getCommentDto)
     }
 
     @Post()
     @UseInterceptors(FileInterceptor('file'))
     async createArticle(@Body() createCommentDto: CreateArticleDto, @UploadedFile() file: Express.Multer.File): Promise<IActicles> {
-        console.log(file);
-        
-        return this.articlesService.createArticles(createCommentDto)
+        return await this.articlesService.createArticles(createCommentDto)
     }
 
     @Delete()
     async deleteArticle(@Body() deleteCommentDto: DeleteArticleDto): Promise<IActicles> {
-        return this.articlesService.deleteArticlesById(deleteCommentDto)
+        return await this.articlesService.deleteArticlesById(deleteCommentDto)
     }
 
     @Put()
     async updateArticle(@Body() updateCommentDto: UpdateArticleDto): Promise<IActicles> {
-        return this.articlesService.updateArticlesById(updateCommentDto)
+        return await this.articlesService.updateArticlesById(updateCommentDto)
     }
 
 }

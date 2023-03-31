@@ -12,26 +12,26 @@ export class UsersController {
 
     @Get()
     async getAllUser(): Promise<IUser[]> {
-        return this.usersService.getAllUsers()
+        return await this.usersService.getAllUsers()
     }
 
     @Get(':id')
     async getUser(@Body() getUserDto: GetUserDto): Promise<IUser> {
-        return this.usersService.getUserById(getUserDto)
+        return await this.usersService.getUserById(getUserDto)
     }
 
     @Post()
-    createUser(@Body() createUserDto: CreateUserDto): IUser {
-        return this.usersService.createUser(createUserDto)
+    async createUser(@Body() createUserDto: CreateUserDto): Promise<IUser> {
+        return await this.usersService.createUser(createUserDto)
     }
 
     @Delete()
-    deleteUser(@Body() deleteUserDto: DeleteUserDto): IUser {
-        return this.usersService.deleteUsersById(deleteUserDto)
+    async deleteUser(@Body() deleteUserDto: DeleteUserDto): Promise<IUser> {
+        return await this.usersService.deleteUsersById(deleteUserDto)
     }
 
     @Put()
-    updateUser(@Body() updateUserDto: UpdateUserDto): IUser {
-        return this.usersService.updateUserById(updateUserDto)
+    async updateUser(@Body() updateUserDto: UpdateUserDto): Promise<IUser> {
+        return await this.usersService.updateUserById(updateUserDto)
     }
 }

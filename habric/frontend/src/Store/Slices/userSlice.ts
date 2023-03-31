@@ -3,7 +3,7 @@ import { IUser } from './../../types/acticles';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 export interface IAddUser {
-    name: string,
+    username: string,
     password: string
 }
 

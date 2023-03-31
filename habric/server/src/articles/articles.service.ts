@@ -4,46 +4,58 @@ import { CreateArticleDto } from './dto/create-articles.dto';
 import { getArticleDto } from './dto/get-articles.dto';
 import { IActicles } from './../types/articles';
 import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/sequelize';
+import { Articles } from './articles.model';
 
 @Injectable()
 export class ArticlesService {
-    private readonly articles: IActicles[] = [{author: 'bot', id: 1, image: 'dfs', name: 'fsd', tags: ['sdff0'], text: 'sdff', watcher: 0}]
+    constructor(@InjectModel(Articles) private articlesModel: typeof Articles){}
 
-    getAllArticles(): IActicles[] {
-        return this.articles
+    getAllArticles(): Promise<IActicles[]> {
+        return this.articlesModel.findAll()
     }
 
-    getArticlesById(getArticlesDto: getArticleDto): IActicles {
-        return this.articles.find((article) => article.id === getArticlesDto.id)
+    getArticlesById(getArticlesDto: getArticleDto): Promise<IActicles> {
+        const id: number = getArticlesDto.id
+        return this.articlesModel.findOne({where: {id}})
     }
 
-    createArticles(createarticlesDto: CreateArticleDto): IActicles {
-        const id = this.articles.at(-1).id + 1 || 0;
-        const watcher = 0;
-        const newarticles = {id, watcher, image: '1', ...createarticlesDto}
-        this.articles.push(newarticles)
-        return newarticles
+    createArticles(createarticlesDto: CreateArticleDto): Promise<IActicles> {
+        return this.articlesModel.create({
+            author: createarticlesDto.author, 
+            text: createarticlesDto.text,
+            name: createarticlesDto.name,
+            image: createarticlesDto.image,
+            tags: createarticlesDto.tags
+        })
     }
 
-    deleteArticlesById(deleteArticlesDto: DeleteArticleDto): IActicles {
-        const articlesIndex = this.articles.findIndex((articles) => articles.id === deleteArticlesDto.id)
-        const articles = this.articles[articlesIndex]
-        const delArticles = this.articles.splice(articlesIndex)
-        return articles
+    async deleteArticlesById(deleteArticlesDto: DeleteArticleDto): Promise<IActicles> {
+        const id = deleteArticlesDto.id
+        const delArticle = await this.articlesModel.findOne({
+            where: {
+                id
+            }
+        })
+        await this.articlesModel.destroy({
+            where: {
+                id
+            }
+        })
+        return delArticle
     }
 
-    updateArticlesById(updateArticlesDto: UpdateArticleDto): IActicles {
-        const articlesIndex = this.articles.findIndex((articles) => articles.id === updateArticlesDto.id)
-        const articles:IActicles = this.articles[articlesIndex]
-        const updatedArticles:IActicles = {id: articles.id, 
-            author: updateArticlesDto.author || articles.author, 
-            text: updateArticlesDto.text || articles.text, 
-            image: updateArticlesDto.name ||  articles.image, 
-            name: updateArticlesDto.name ||  articles.name,
-            tags: updateArticlesDto.tags ||  articles.tags,
-            watcher: updateArticlesDto.watcher ||  articles.watcher,
-        }
-        this.articles[articlesIndex] = updatedArticles
-        return updatedArticles;
+    updateArticlesById(updateArticlesDto: UpdateArticleDto): Promise<IActicles> {
+        const id = updateArticlesDto.id
+        this.articlesModel.update(
+            updateArticlesDto,
+            {
+                where: {
+                    id
+                }
+            }
+        )
+
+        return this.articlesModel.findOne({where: {id}});
     }
 }

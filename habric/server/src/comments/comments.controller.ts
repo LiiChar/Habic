@@ -12,26 +12,27 @@ export class CommentsController {
 
     @Get()
     async getAllComment(): Promise<IComment[]> {
-        return this.commentsService.getAllComments()
+        return await this.commentsService.getAllComments()
     }
 
     @Get(':id')
     async getComment(@Body() getCommentDto: GetCommentsDto): Promise<IComment> {
-        return this.commentsService.getCommentById(getCommentDto)
+        return await this.commentsService.getCommentById(getCommentDto)
     }
 
     @Post()
-    createComment(@Body() createCommentDto: CreateCommentDto): IComment {
-        return this.commentsService.createComment(createCommentDto)
+    async createComment(@Body() createCommentDto: CreateCommentDto): Promise<IComment> {
+        return await this.commentsService.createComment(createCommentDto)
     }
 
     @Delete()
-    deleteComment(@Body() deleteCommentDto: DeleteCommentDto): IComment {
-        return this.commentsService.deleteCommentById(deleteCommentDto)
+    async deleteComment(@Body() deleteCommentDto: DeleteCommentDto): Promise<IComment> {
+        return await this.commentsService.deleteCommentById(deleteCommentDto)
     }
 
     @Put()
-    updateComment(@Body() updateCommentDto: UpdateCommemtDto): IComment {
-        return this.commentsService.updateCommentById(updateCommentDto)
+    async updateComment(@Body() updateCommentDto: UpdateCommemtDto): Promise<IComment> {
+        return await this.commentsService.updateCommentById(updateCommentDto)
     }
+    
 }

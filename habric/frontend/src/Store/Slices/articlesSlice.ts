@@ -4,7 +4,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 interface IAddArticle {
     author: string;
     name: string;
-    tags: string[];
+    tags: string;
     text?: string;
 }
 
