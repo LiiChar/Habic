@@ -4,7 +4,8 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 export interface IAddUser {
     username: string,
-    password: string
+    password: string,
+    jwtToken?: string
 }
 
 export const usersApi = createApi({
@@ -18,9 +19,17 @@ export const usersApi = createApi({
             }),
             providesTags: result => ['Users']
         }),
-        createUsers: build.mutation<IUser, IAddUser>({
+        createUsers: build.mutation<string, IAddUser>({
             query: (user) => ({
-                url: '/users',
+                url: '/auth/registration',
+                method: 'POST',
+                body: user
+            }),
+            invalidatesTags: ['Users']
+        }),
+        loginUser: build.mutation<string, IAddUser>({
+            query: (user) => ({
+                url: '/auth/login',
                 method: 'POST',
                 body: user
             }),
@@ -29,4 +38,4 @@ export const usersApi = createApi({
     })
 })
 
-export const {useCreateUsersMutation, useFetchAllUsersQuery} = usersApi
+export const {useCreateUsersMutation, useFetchAllUsersQuery, useLoginUserMutation} = usersApi

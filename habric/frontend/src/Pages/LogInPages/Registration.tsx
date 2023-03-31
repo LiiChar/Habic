@@ -1,26 +1,20 @@
 import React from 'react'
 import { Link, useNavigate } from 'react-router-dom';
-import {  useFetchAllUsersQuery, useCreateUsersMutation, IAddUser } from '../../Store/Slices/userSlice';
+import { useCreateUsersMutation } from '../../Store/Slices/userSlice';
 
 export const Registration = () => {
   const [username, setUsername] = React.useState<string>('')
   const [password, setPassword] = React.useState<string>('')
-  const [isExistUser, setIsExistUser] = React.useState<boolean>(true)
   const navigate = useNavigate()
+  const [createUsers, {isSuccess, isError, data}] = useCreateUsersMutation()
 
-  const {data: users} = useFetchAllUsersQuery()
-  const [createUsers, {isSuccess}] = useCreateUsersMutation()
-
-  function setLogin() {
-    const thisUser = users?.find((user) => user.username === username && user.password === password)
-    if (!thisUser) {
+  async function setLogin() {
+    if (username && password) {
       const users = {username: username, password: password}
-      createUsers(users)
-      if (isSuccess ) {
+      const user = await createUsers(users)
+      if (user) {
         navigate('/login')
       }
-    } else {
-      setIsExistUser(true)
     }
   }
 
@@ -29,8 +23,8 @@ export const Registration = () => {
       <div style={{ borderRadius: '4px' }} className='w-1/3 h-1/4 m-8 border-2 border-solid border-sky-900'>
         <div className='m-4'>
           <div>
-            {isExistUser &&
-              <div className='text-xs mt-2'>Ошибка, измените логин или пароль, или <Link className='font-bold' to={'/login'}>войдите</Link></div>
+            {isError &&
+              <div className='text-xs mt-2'>{data ?? ''}</div>
             }
           </div>
           <div>

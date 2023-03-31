@@ -24,6 +24,14 @@ export class UsersService {
         })
     }
 
+    getUserByUsername(username: string): Promise<IUser> {
+        return this.usersModel.findOne({
+            where: {
+                username
+            }
+        })
+    }
+
     createUser(createUserDto: CreateUserDto): Promise<IUser> {
         return this.usersModel.create(createUserDto)
     }

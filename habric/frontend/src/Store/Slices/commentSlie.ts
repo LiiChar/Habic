@@ -5,6 +5,7 @@ interface IAddComment {
     author: string
     text: string; 
     to: number;
+    jwtToken?: string
 }
 
 export const commentsApi = createApi({

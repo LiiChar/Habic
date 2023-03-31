@@ -15,7 +15,7 @@ export const Header = () => {
           <Link to={'/'} className='text-3xl'>Бигбо</Link>
         </div>
         <div>
-          {user.id && user.name !== 'Bot' ? <div>{user.name}</div> : <Link to={'/login'}>Войти</Link>}
+          {user.name !== 'Bot' ? <div>{user.name}</div> : <Link to={'/login'}>Войти</Link>}
         </div>
         <div>
           <button onClick={() => dispatch(setVision(true))}>Добавить запись</button>

@@ -6,6 +6,7 @@ interface IAddArticle {
     name: string;
     tags: string;
     text?: string;
+    jwtToken?: string
 }
 
 export const articlesApi = createApi({

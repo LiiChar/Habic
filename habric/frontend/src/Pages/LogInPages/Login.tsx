@@ -1,29 +1,31 @@
 import React from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
 import { setUser } from '../../Store/Slices/setUserSlice'
-import { useFetchAllUsersQuery } from '../../Store/Slices/userSlice'
+import { useFetchAllUsersQuery, useLoginUserMutation } from '../../Store/Slices/userSlice'
+import { RootState } from '../../Store/store'
 
 export const Login = () => {
   const [name, setName] = React.useState<string>('')
   const [password, setPassword] = React.useState<string>('')
-  const [isExistUser, setIsExistUser] = React.useState<boolean>(true)
+  const jwtToken = useSelector((state: RootState) => state.setUser.jwtToken)
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  const {data: users} = useFetchAllUsersQuery()
+  const [loginUser, {isSuccess, isError, data}] = useLoginUserMutation()
 
   
   
   
-  function setLogin() {
-    const thisUser = users?.find((user) => user.username === name && user.password === String(password))
-    console.log(thisUser);
-    if (thisUser) {
-      dispatch(setUser({ id: thisUser.id, name }))
-      sessionStorage.setItem('user', JSON.stringify({id: thisUser.id, name}));
-      navigate('/')
-    } else {
-      setIsExistUser(false)
+  async function setLogin() {
+    if (name && password) {
+      const user = await loginUser({username: name, password: password, jwtToken})
+      console.log(data);
+      
+      if (user) {
+        dispatch(setUser({ name }))
+        sessionStorage.setItem('user', JSON.stringify({name}));
+        navigate('/')
+      }
     }
   }
 
@@ -34,9 +36,9 @@ export const Login = () => {
       <div style={{ borderRadius: '4px' }} className='w-1/3 h-1/4 m-8 border-2 border-solid border-sky-900'>
         <div className='m-4'>
             <div>
-              {!isExistUser &&
-                <div className='text-xs mt-2'>Ошибка, измените логин или пароль, или <Link className='font-bold' to={'/register'}>зарегестрируйтесь</Link></div>
-              }
+            {isError &&
+              <div className='text-xs mt-2'>{data ?? ''}</div>
+            }
             </div>
           <div>
             <div className='text-xs'>Логин</div>
