@@ -9,7 +9,7 @@ interface IInitialState {
 }
 
 interface IUser {
-    name: string
+    name: string | 'Bot'
 }
 
 const initialState: IInitialState = {

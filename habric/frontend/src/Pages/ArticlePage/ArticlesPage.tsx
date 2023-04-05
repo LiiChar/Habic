@@ -1,6 +1,6 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { Comments } from '../../Components/comments/Comments'
 import { useFetchAllArticlesQuery } from '../../Store/Slices/articlesSlice'
 import { useCreateCommentMutation } from '../../Store/Slices/commentSlie'
@@ -28,12 +28,19 @@ export const ArticlesPage = () => {
     <>
       <div className='m-5 border-2 border-solid border-sky-900'>
         <div className='m-4'>
-          <div>{article?.author}</div>
+          <div>
+            {article?.author}
+            <div>
+            {user.name === article?.author &&
+              <Link to={`/artic/${id}/edit`}>изменить</Link>
+          }
+            </div>
+            </div>
           <div className='my-2 text-lg'><b>{article?.name}</b></div>
           <div className='text-xs mb-2'>{article?.tags}</div>
-          <div>
+          <pre>
             {article?.text}
-          </div>
+          </pre>
         </div>
       </div>
       <div className='m-5 border-2 border-solid border-sky-900'>

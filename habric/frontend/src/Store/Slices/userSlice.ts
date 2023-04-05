@@ -19,11 +19,28 @@ export const usersApi = createApi({
             }),
             providesTags: result => ['Users']
         }),
+        getUserById: build.query<IUser, string>({
+            query: (id) => ({
+                url: `/users/${id}`
+            })
+        }),
+        getNameByToken: build.mutation<string, void>({
+            query: () => ({
+                url: '/auth/name',
+                method: 'POST',
+                headers: {authorization: JSON.parse(sessionStorage.getItem('token') || '')}
+            })
+        }),
+        getNameByName: build.query<IUser, string>({
+            query: (username) => ({
+                url: `/users/name/${username}`,
+            })
+        }),
         createUsers: build.mutation<string, IAddUser>({
             query: (user) => ({
                 url: '/auth/registration',
                 method: 'POST',
-                body: user
+                body: {username: user.username, password: user.password}
             }),
             invalidatesTags: ['Users']
         }),
@@ -31,11 +48,11 @@ export const usersApi = createApi({
             query: (user) => ({
                 url: '/auth/login',
                 method: 'POST',
-                body: user
+                body: {username: user.username, password: user.password}
             }),
             invalidatesTags: ['Users']
         })
     })
 })
 
-export const {useCreateUsersMutation, useFetchAllUsersQuery, useLoginUserMutation} = usersApi
+export const {useCreateUsersMutation, useFetchAllUsersQuery, useLoginUserMutation, useGetNameByTokenMutation, useGetUserByIdQuery, useGetNameByNameQuery} = usersApi

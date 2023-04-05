@@ -8,12 +8,22 @@ interface IAddComment {
     jwtToken?: string
 }
 
+interface CommentArr extends IComment  {
+    createdAt: string;
+    updatedAt: string;
+}
+
+interface UpdateComm {
+    id: number;
+    text: string;
+}
+
 export const commentsApi = createApi({
     reducerPath: 'commentsApi',
     baseQuery: fetchBaseQuery({baseUrl: 'http://localhost:5000'}),
     tagTypes: ['Comments'],
     endpoints: (build) => ({
-        fetchAllComments: build.query<IComment[], void>({
+        fetchAllComments: build.query<CommentArr[], void>({
             query: () => ({
                 url: '/comments'
             }),
@@ -26,9 +36,25 @@ export const commentsApi = createApi({
                 body: comment
             }),
             invalidatesTags: ['Comments']
+        }),
+        updateComment: build.mutation<IComment, UpdateComm>({
+            query: (comment) => ({
+                url: '/comments',
+                method: 'PUT',
+                body: comment
+            }),
+            invalidatesTags: ['Comments']
+        }),
+        deleteComment: build.mutation<IComment, {id: number}>({
+            query: (comment) => ({
+                url: '/comments',
+                method: 'DELETE',
+                body: comment
+            }),
+            invalidatesTags: ['Comments']
         })
     })
 })
 
 
-export const {useCreateCommentMutation, useFetchAllCommentsQuery} = commentsApi
+export const {useCreateCommentMutation, useFetchAllCommentsQuery, useDeleteCommentMutation, useUpdateCommentMutation} = commentsApi

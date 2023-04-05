@@ -25,6 +25,7 @@ export const AddArticles = () => {
     function changeTags(tag:string) {
         setTags([...tags, tag])
     }
+    
 
     return (
         <div onClick={() => dispatch(setVision(false))} className='fixed top-0 w-full h-full bg-slate-500 bg-opacity-50 flex justify-center items-center'>
@@ -33,7 +34,7 @@ export const AddArticles = () => {
                     <textarea  maxLength={150} autoFocus required className='outline-none resize-none' value={name} onChange={(e) => setName(e.target.value)} placeholder='Введите тему'></textarea>
                 </div>
                 <div>
-                    <textarea required ref={ref} value={text} onChange={() => setText(ref.current?.value)} className='w-full h-96 outline-none resize-none'></textarea>
+                    <textarea wrap={'soft'} required ref={ref} value={text} onChange={() => setText(ref.current?.value)} className='w-full h-96 outline-none resize-none'></textarea>
                 </div>
                 <div className='flex flex-row justify-between'>
                     <button type={'submit'} onClick={(e) => publishing(e)}>Выложить</button>

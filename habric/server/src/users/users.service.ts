@@ -6,10 +6,13 @@ import { GetUserDto } from './dto/get-user.dto';
 import { DeleteUserDto } from './dto/delete-user.dto';
 import { InjectModel } from '@nestjs/sequelize';
 import { Users } from './users.model';
+import { GetUserIdDto } from './dto/get-userId.dto';
 
 @Injectable()
 export class UsersService {
-    constructor(@InjectModel(Users) private usersModel: typeof Users) {}
+    constructor(
+        @InjectModel(Users) private usersModel: typeof Users, 
+    ) {}
 
     getAllUsers(): Promise<IUser[]> {
         return this.usersModel.findAll()
@@ -28,6 +31,14 @@ export class UsersService {
         return this.usersModel.findOne({
             where: {
                 username
+            }
+        })
+    }
+
+    async getNameByToket(id): Promise<any> {
+        return this.usersModel.findOne({
+            where: {
+                id
             }
         })
     }

@@ -14,16 +14,33 @@ export class AuthService {
         private usersService: UsersService, 
         private jwtService: JwtService
     ) {}
+
+    async getNameByToket(headers): Promise<any> {
+        
+        const [type, tokenType] = headers.authorization?.split(' ') ?? [];
+        const token = type === 'Bearer' ? tokenType : undefined;
+        if (type) {
+            const {id, username, password} = await this.jwtService.verifyAsync(type, {
+                secret: process.env.SECRET_KEY
+            })
+            return this.usersService.getNameByToket(id)
+        }
+    }
     
     async login(signInDto: SignInDto): Promise<any> {
         const user: IUser = await this.usersService.getUserByUsername(signInDto.username);
-        const passwordEquals = await bcrypt.compareSync(signInDto.password, user.password)
-        if (user && passwordEquals) {
-            const payload = {id: user.id, username: user.username, password: user.password};
-            return await this.jwtService.signAsync(payload)
-        } else {
+        if (user) {
+            const passwordEquals = await bcrypt.compareSync(signInDto.password, user.password)
+            if (user && passwordEquals) {
+                const payload = {id: user.id, username: user.username, password: user.password};
+                return await this.jwtService.signAsync(payload)
+            } else {
+                throw new UnauthorizedException({message: 'Неправильный логин или пароль'});
+            }
+        }  else {
             throw new UnauthorizedException({message: 'Неправильный логин или пароль'});
         }
+
 
     }
 

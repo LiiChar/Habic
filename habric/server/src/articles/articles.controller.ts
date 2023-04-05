@@ -3,9 +3,10 @@ import { DeleteArticleDto } from './dto/delete-articlesdto';
 import { CreateArticleDto } from './dto/create-articles.dto';
 import { IActicles } from './../types/articles';
 import { ArticlesService } from './articles.service';
-import { Controller, Get, Post, Delete, Put, Body, UseInterceptors, UploadedFile } from '@nestjs/common';
+import { Controller, Get, Post, Delete, Put, Body, UseInterceptors, UploadedFile, Param } from '@nestjs/common';
 import { getArticleDto } from './dto/get-articles.dto';
 import { FileInterceptor } from '@nestjs/platform-express'
+import { GetArticlesDto } from './dto/get-articleses.dto';
 
 @Controller('articles')
 export class ArticlesController {
@@ -17,8 +18,13 @@ export class ArticlesController {
     }
 
     @Get(':id')
-    async getArticle(@Body() getCommentDto: getArticleDto): Promise<IActicles> {
-        return await this.articlesService.getArticlesById(getCommentDto)
+    async getArticle(@Param() GetArticleDto: getArticleDto): Promise<IActicles> {
+        return await this.articlesService.getArticlesById(GetArticleDto)
+    }
+
+    @Get('articles/:username')
+    async getArticles(@Param() getArticlesDto: GetArticlesDto): Promise<IActicles[]> {
+        return await this.articlesService.getArticlesByName(getArticlesDto)
     }
 
     @Post()
@@ -27,8 +33,8 @@ export class ArticlesController {
         return await this.articlesService.createArticles(createCommentDto)
     }
 
-    @Delete()
-    async deleteArticle(@Body() deleteCommentDto: DeleteArticleDto): Promise<IActicles> {
+    @Delete(':id')
+    async deleteArticle(@Param() deleteCommentDto: DeleteArticleDto): Promise<IActicles> {
         return await this.articlesService.deleteArticlesById(deleteCommentDto)
     }
 

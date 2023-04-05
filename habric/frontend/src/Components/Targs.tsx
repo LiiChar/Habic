@@ -25,7 +25,7 @@ export const Targs: FC<IPropsTags> = (props) => {
     return (
         <div>
             {vision && <div className='absolute bg-slate-400 top-2/4 right-1/4 mb-8 w-1/6 h-2/6'>
-                {filtetTags.map((tag) => (<div onClick={() => 
+                {filtetTags.map((tag) => (<div key={tag} onClick={() => 
                     {
                         if (!props.tags.includes(tag)) {
                             props.setTags(tag)
@@ -38,7 +38,7 @@ export const Targs: FC<IPropsTags> = (props) => {
                 <div>
                     {
                         props.tags.map((tag) => (
-                            <span>{tag} </span>
+                            <span key={tag}>{tag} </span>
                         ))
                     }
                 </div>

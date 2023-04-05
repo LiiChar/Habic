@@ -1,7 +1,7 @@
 import userReducer from './Slices/setUserSlice';
 import { articlesApi } from './Slices/articlesSlice';
 import { commentsApi } from './Slices/commentSlie';
-import { configureStore } from "@reduxjs/toolkit";
+import { configureStore,  } from "@reduxjs/toolkit";
 import { usersApi } from "./Slices//userSlice"
 
 
@@ -12,9 +12,9 @@ export const store = configureStore({
         [commentsApi.reducerPath]: commentsApi.reducer,
         [articlesApi.reducerPath]: articlesApi.reducer,
     },
-    middleware: (getDefaultMiddleware) => {
-        return getDefaultMiddleware().concat(usersApi.middleware).concat(commentsApi.middleware).concat(articlesApi.middleware)
-    }
+    middleware: (getDefaultMiddleware) =>
+        getDefaultMiddleware().concat(usersApi.middleware).concat(commentsApi.middleware).concat(articlesApi.middleware)
+    
 })
 
 export type RootState = ReturnType<typeof store.getState>

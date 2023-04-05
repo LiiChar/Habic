@@ -5,14 +5,20 @@ import { useCreateUsersMutation } from '../../Store/Slices/userSlice';
 export const Registration = () => {
   const [username, setUsername] = React.useState<string>('')
   const [password, setPassword] = React.useState<string>('')
+  const [error, setError] = React.useState<string>('')
   const navigate = useNavigate()
   const [createUsers, {isSuccess, isError, data}] = useCreateUsersMutation()
 
   async function setLogin() {
-    if (username && password) {
-      const users = {username: username, password: password}
-      const user = await createUsers(users)
-      if (user) {
+    if (username !== '' && password !== '') {
+      const user: any = await createUsers({username: username, password: password})
+      if (user?.error?.data?.message) {
+        setError(user?.error.data.message)
+      }
+      
+      if (user?.error?.originalStatus === 201) {
+        sessionStorage.setItem('token', JSON.stringify(user?.error?.data))
+        sessionStorage.setItem('user', JSON.stringify(username));
         navigate('/login')
       }
     }
@@ -23,8 +29,8 @@ export const Registration = () => {
       <div style={{ borderRadius: '4px' }} className='w-1/3 h-1/4 m-8 border-2 border-solid border-sky-900'>
         <div className='m-4'>
           <div>
-            {isError &&
-              <div className='text-xs mt-2'>{data ?? ''}</div>
+            {error &&
+              <div className='text-xs mt-2'>{error ?? ''}</div>
             }
           </div>
           <div>

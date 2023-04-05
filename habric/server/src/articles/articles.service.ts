@@ -6,6 +6,7 @@ import { IActicles } from './../types/articles';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Articles } from './articles.model';
+import { GetArticlesDto } from './dto/get-articleses.dto';
 
 @Injectable()
 export class ArticlesService {
@@ -20,6 +21,11 @@ export class ArticlesService {
         return this.articlesModel.findOne({where: {id}})
     }
 
+    getArticlesByName(getArticlesDto: GetArticlesDto): Promise<IActicles[]> {
+        const author: string = getArticlesDto.username;
+        return this.articlesModel.findAll({where: {author}})
+    }
+
     createArticles(createarticlesDto: CreateArticleDto): Promise<IActicles> {
         return this.articlesModel.create({
             author: createarticlesDto.author, 
@@ -29,7 +35,6 @@ export class ArticlesService {
             tags: createarticlesDto.tags
         })
     }
-
     async deleteArticlesById(deleteArticlesDto: DeleteArticleDto): Promise<IActicles> {
         const id = deleteArticlesDto.id
         const delArticle = await this.articlesModel.findOne({
@@ -44,9 +49,9 @@ export class ArticlesService {
         })
         return delArticle
     }
-
     updateArticlesById(updateArticlesDto: UpdateArticleDto): Promise<IActicles> {
         const id = updateArticlesDto.id
+        delete updateArticlesDto.id
         this.articlesModel.update(
             updateArticlesDto,
             {
@@ -55,7 +60,6 @@ export class ArticlesService {
                 }
             }
         )
-
         return this.articlesModel.findOne({where: {id}});
     }
 }

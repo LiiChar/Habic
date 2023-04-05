@@ -3,27 +3,34 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useCreateCommentMutation, useFetchAllCommentsQuery } from '../../Store/Slices/commentSlie';
 import { RootState } from '../../Store/store'
 
+interface Value {
+    value: string,
+    setValue: any
+}
+
 interface IProps {
     idef?: number | null;
     author: string;
+    text: Value;
+    
 }
 
 export const AnswerComment: React.FC<IProps> = (props) => {
     const [vision, setVision] = React.useState<boolean>(false)
-    const [answerer, setAnswer] = React.useState<string>('')
+    // const [answerer, setAnswer] = React.useState<string>('')
     const user = useSelector((state: RootState) => state.setUser.user)
 
-    const {data: store} = useFetchAllCommentsQuery()
+    const {data: store } = useFetchAllCommentsQuery()
     const [addComment, {isSuccess}] = useCreateCommentMutation()
 
     const AnswerComments = store?.filter((com) => props.idef === com.to)
 
-    function addAnswer() {
+    function addAnswer() { 
 
-        addComment({ author: user.name, text: answerer, to: Number(props?.idef) })
+        addComment({ author: user.name, text: props.text.value, to: Number(props?.idef) })
         if (isSuccess) {
 
-            setAnswer('')
+            props.text.setValue('')
         }
     }
 
@@ -36,7 +43,7 @@ export const AnswerComment: React.FC<IProps> = (props) => {
             {vision &&
                 <div className='ml-6 w-full'>
                     {user.name !== props.author && <div>
-                        <input style={{ border: '1px solid blue', borderRadius: "4px" }} className='outline-none' type="text" value={answerer} onChange={(e) => setAnswer(e.target.value)} />
+                        <input style={{ border: '1px solid blue', borderRadius: "4px" }} className='outline-none' type="text" value={props.text.value} onChange={(e) => props.text.setValue(e.target.value)} />
                         <button onClick={() => addAnswer()}>Отправить</button>
                     </div>}
                     {
@@ -46,8 +53,8 @@ export const AnswerComment: React.FC<IProps> = (props) => {
                                     <span className='font-bold '>{answer.author}</span>
                                     <span className='ml-2'>сейчас</span>
                                 </div>
-                                <div>{answer.text}</div>
-                                <AnswerComment idef={answer.id} author={answer.author}/>
+                                <pre>{answer.text}</pre>
+                                <AnswerComment text={{value: props.text.value, setValue: props.text.setValue}}  idef={answer.id} author={answer.author}/>
                             </div>
                         ))
                     }

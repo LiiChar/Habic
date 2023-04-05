@@ -2,28 +2,38 @@ import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
 import { setUser } from '../../Store/Slices/setUserSlice'
-import { useFetchAllUsersQuery, useLoginUserMutation } from '../../Store/Slices/userSlice'
+import { useFetchAllUsersQuery, useGetNameByTokenMutation, useLoginUserMutation } from '../../Store/Slices/userSlice'
 import { RootState } from '../../Store/store'
 
 export const Login = () => {
   const [name, setName] = React.useState<string>('')
   const [password, setPassword] = React.useState<string>('')
   const jwtToken = useSelector((state: RootState) => state.setUser.jwtToken)
+  const [error, setError] = React.useState<string>('')
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const [loginUser, {isSuccess, isError, data}] = useLoginUserMutation()
 
-  
+  React.useEffect(() => {
+    if(sessionStorage.getItem('user') && JSON.parse(sessionStorage.getItem('user') || '') !== 'Bot') {
+      dispatch(setUser({ name: JSON.parse(sessionStorage.getItem('user') || '') || 'Bot'}))
+      sessionStorage.setItem('user', JSON.stringify(JSON.parse(sessionStorage.getItem('user') || '')));
+      navigate('/')
+    }
+  }, [])
   
   
   async function setLogin() {
-    if (name && password) {
-      const user = await loginUser({username: name, password: password, jwtToken})
-      console.log(data);
+    if (name !== '' && password !== '') {
+      const user: any = await loginUser({username: name, password: password, jwtToken})
+      if (user?.error) {
+        setError(user?.error.data.message)
+      }
       
-      if (user) {
+      if (user?.error?.originalStatus === 200) {
         dispatch(setUser({ name }))
-        sessionStorage.setItem('user', JSON.stringify({name}));
+        sessionStorage.setItem('token', JSON.stringify(user?.error?.data));
+        sessionStorage.setItem('user', JSON.stringify(name));
         navigate('/')
       }
     }
@@ -36,8 +46,8 @@ export const Login = () => {
       <div style={{ borderRadius: '4px' }} className='w-1/3 h-1/4 m-8 border-2 border-solid border-sky-900'>
         <div className='m-4'>
             <div>
-            {isError &&
-              <div className='text-xs mt-2'>{data ?? ''}</div>
+            {error &&
+              <div className='text-xs mt-2 text-red-500'><b> {error ?? ''}</b></div>
             }
             </div>
           <div>

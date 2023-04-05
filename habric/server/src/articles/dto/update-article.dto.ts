@@ -5,5 +5,5 @@ export interface UpdateArticleDto {
     name?: string;
     watcher?: number;
     image?: string;
-    tags?: string[];
+    tags?: string;
 }
