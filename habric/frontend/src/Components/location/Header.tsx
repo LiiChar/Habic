@@ -1,15 +1,15 @@
-import React from 'react'
+import React, { memo, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
 import { setVision } from '../../Store/Slices/setUserSlice'
 import { RootState } from '../../Store/store'
+import { useGetImageByNameQuery, useGetNameByNameQuery } from '../../Store/Slices/userSlice'
+import { ImageUser } from '../ImageUser'
 
-export const Header = () => {
+export const Header = memo( function() {
   const user = useSelector((state: RootState) => state.setUser.user)
   const dispatch = useDispatch()
   const navigate = useNavigate()
-
-  console.log('1');
 
 
   return (
@@ -27,4 +27,4 @@ export const Header = () => {
       </div>
     </div>
   )
-}
+})

@@ -6,6 +6,8 @@ import { AnswerComment } from './AnswerComment'
 import changeTimeFromDB from '../../utils/changeTimeFromDB'
 import { FallDownList } from '../FallDownList'
 import { useSelector } from 'react-redux'
+import { useFetchAllUsersQuery } from '../../Store/Slices/userSlice'
+import { ImageUser } from '../ImageUser'
 
 interface IProps {
   idef?: number | null
@@ -13,6 +15,7 @@ interface IProps {
 
 export const Comments: React.FC<IProps> = (props) => {
   const {data: store} = useFetchAllCommentsQuery()
+  
   const [answerer, setAnswer] = React.useState<string>('')
   const [isInput, setIsInput] = React.useState<number | null>()
 
@@ -29,6 +32,7 @@ export const Comments: React.FC<IProps> = (props) => {
         <div key={com.id}>
           <div>
             <div className='ml-2 text-sm flex flex-row'>
+              <ImageUser user={com.author} heigth={'50'} width={'50'}/>
               <div className='font-bold '>{com.author}</div>
               <div className='ml-2 text-slate-500 text-xs'>{changeTimeFromDB(com.updatedAt)}</div>
               <div><FallDownList IsInpuy={setIsInput} isInput={handleIsInput} value={answerer} props={com}/></div>

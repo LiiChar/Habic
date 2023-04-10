@@ -1,3 +1,4 @@
+import { FileService } from './../file/file.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { Injectable } from '@nestjs/common';
@@ -35,6 +36,15 @@ export class UsersService {
         })
     }
 
+    async getImageByName(username: string): Promise<string> {
+        const user = await this.usersModel.findOne({
+            where: {
+                username
+            }
+        })
+        return user.image
+    }
+
     async getNameByToket(id): Promise<any> {
         return this.usersModel.findOne({
             where: {
@@ -44,7 +54,7 @@ export class UsersService {
     }
 
     createUser(createUserDto: CreateUserDto): Promise<IUser> {
-        return this.usersModel.create(createUserDto)
+        return this.usersModel.create({password: createUserDto.password, username: createUserDto.username, image: createUserDto.image})
     }
 
     async deleteUsersById(deleteUserDto: DeleteUserDto): Promise<IUser> {

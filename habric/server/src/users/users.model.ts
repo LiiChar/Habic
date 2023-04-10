@@ -11,4 +11,7 @@ export class Users extends Model<IUser>{
 
     @Column({type: DataType.STRING, allowNull: false})
     password: string;
+
+    @Column({type: DataType.TEXT, allowNull: true})
+    image: string;
 }

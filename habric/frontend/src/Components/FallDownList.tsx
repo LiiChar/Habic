@@ -12,7 +12,7 @@ interface IProps {
     IsInpuy: any;
 }
 
-export const FallDownList: React.FC<IProps> = (comment) => {
+export const FallDownList: React.FC<IProps> = React.memo((comment) => {
     const [vision, setVision] = React.useState<boolean>(false);
     const [isChange, setChange] = React.useState<boolean>(false);
 
@@ -60,4 +60,4 @@ export const FallDownList: React.FC<IProps> = (comment) => {
         )
     }
 
-}
+})

@@ -4,8 +4,9 @@ import { AuthGuard } from './auth.guard';
 import { SignInDto } from './dto/signin-dto';
 import { AuthService } from './auth.service';
 import { Controller, Post, UseGuards, Get, Request, Headers } from '@nestjs/common';
-import { Body, HttpCode } from '@nestjs/common/decorators';
+import { Body, HttpCode, UploadedFile, UseInterceptors } from '@nestjs/common/decorators';
 import { HttpStatus } from '@nestjs/common/enums';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('auth')
 export class AuthController {
@@ -25,7 +26,8 @@ export class AuthController {
     }
 
     @Post('/registration')
-    async registration(@Body() userDto: CreateUserDto): Promise<IUser> {
-        return this.authService.registration(userDto)
+    @UseInterceptors(FileInterceptor('image'))
+    async registration(@Body() userDto: CreateUserDto, @UploadedFile() image: Express.Multer.File): Promise<IUser> {
+        return this.authService.registration(userDto, image)
     }
 }

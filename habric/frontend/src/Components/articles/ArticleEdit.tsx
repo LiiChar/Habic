@@ -38,6 +38,7 @@ export const ArticleEdit = () => {
 
     function deleteArticle() {
         delArtilcle(id)
+        navigate(`/`)
     }
 
     function changeTags(tag:string) {

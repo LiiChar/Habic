@@ -28,9 +28,9 @@ export class ArticlesController {
     }
 
     @Post()
-    @UseInterceptors(FileInterceptor('file'))
-    async createArticle(@Body() createCommentDto: CreateArticleDto, @UploadedFile() file: Express.Multer.File): Promise<IActicles> {
-        return await this.articlesService.createArticles(createCommentDto)
+    @UseInterceptors(FileInterceptor('image'))
+    async createArticle(@Body() createCommentDto: CreateArticleDto, @UploadedFile() image: Express.Multer.File): Promise<IActicles> {
+        return await this.articlesService.createArticles(createCommentDto, image)
     }
 
     @Delete(':id')

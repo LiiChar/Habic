@@ -9,6 +9,8 @@ import { ConfigModule } from '@nestjs/config';
 import { Comments } from './comments/comments.model';
 import { Articles } from './articles/articles.model';
 import { AuthModule } from './auth/auth.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import * as path from 'path';
 
 @Module({
   imports: [UsersModule,
@@ -27,6 +29,9 @@ import { AuthModule } from './auth/auth.module';
       autoLoadModels: true,
       synchronize: true,
       models: [Users, Comments, Articles]
+    }),
+    ServeStaticModule.forRoot({
+      rootPath: path.resolve(__dirname, 'static'),
     }),
     AuthModule,
   ],

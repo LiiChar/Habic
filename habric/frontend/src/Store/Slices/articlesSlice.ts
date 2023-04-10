@@ -7,6 +7,7 @@ interface IAddArticle {
     name: string;
     tags: string;
     text?: string;
+    image: ImageData;
     jwtToken?: string
 }
 
@@ -51,7 +52,7 @@ export const articlesApi = createApi({
             }),
             providesTags: result => ['Articles']
         }),
-        createArticle: build.mutation<IActicles, IAddArticle>({
+        createArticle: build.mutation<IActicles, any>({
             query: (article) => ({
                 url: '/articles',
                 method: 'POST',

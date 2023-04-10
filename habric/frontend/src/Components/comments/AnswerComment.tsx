@@ -2,6 +2,7 @@ import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useCreateCommentMutation, useFetchAllCommentsQuery } from '../../Store/Slices/commentSlie';
 import { RootState } from '../../Store/store'
+import { useFetchAllUsersQuery, useGetNameByNameQuery } from '../../Store/Slices/userSlice';
 
 interface Value {
     value: string,

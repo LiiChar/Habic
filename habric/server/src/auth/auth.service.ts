@@ -1,3 +1,4 @@
+import { FileService } from './../file/file.service';
 import { CreateUserDto } from './../users/dto/create-user.dto';
 import { HttpStatus } from '@nestjs/common/enums';
 import { SignInDto } from './dto/signin-dto';
@@ -12,7 +13,8 @@ import * as bcrypt from 'bcrypt';
 export class AuthService {
     constructor ( 
         private usersService: UsersService, 
-        private jwtService: JwtService
+        private jwtService: JwtService,
+        private fileService: FileService
     ) {}
 
     async getNameByToket(headers): Promise<any> {
@@ -40,11 +42,11 @@ export class AuthService {
         }  else {
             throw new UnauthorizedException({message: 'Неправильный логин или пароль'});
         }
+    }   
 
-
-    }
-
-    async registration(registrationDto: CreateUserDto): Promise<any> {
+    async registration(registrationDto: CreateUserDto, avatar): Promise<any> {
+        const createImage = this.fileService.createImage(avatar)
+        
         const user: IUser = await this.usersService.getUserByUsername(registrationDto.username);
 
         if (user) {
@@ -52,7 +54,7 @@ export class AuthService {
         }
         const hashPassword = await bcrypt.hash(registrationDto.password, 5);
 
-        const newUser = await this.usersService.createUser({...registrationDto, password: hashPassword});
+        const newUser = await this.usersService.createUser({...registrationDto, password: hashPassword, image: createImage});
 
         const payload = {id: newUser.id, username: newUser.username, password: newUser.password};
         return await this.jwtService.signAsync(payload)

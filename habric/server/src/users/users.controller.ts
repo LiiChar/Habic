@@ -5,8 +5,10 @@ import { DeleteUserDto } from './dto/delete-user.dto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { GetUserDto } from './dto/get-user.dto';
 import { UsersService } from './users.service';
-import { Controller, Get, Post, Body, Delete, Put, UseGuards, Res, Headers, Param } from '@nestjs/common';
+import { Controller, Get, Post, Body, Delete, Put, UseGuards, Res, Headers, Param, UseInterceptors, UploadedFile } from '@nestjs/common';
 import { IUser } from 'src/types/user';
+
+import { FileInterceptor } from '@nestjs/platform-express'
 
 @Controller('users')
 export class UsersController {
@@ -25,6 +27,11 @@ export class UsersController {
     @Get('name/:username')
     async getUserByName(@Param() getUserIdDto: GetUserIdDto ): Promise<IUser> {
         return await this.usersService.getUserByUsername(getUserIdDto.username)
+    }
+
+    @Get('image/:username')
+    async getImageByName(@Param() getImageIdDto: GetUserIdDto): Promise<string> {
+        return await this.usersService.getImageByName(getImageIdDto.username)
     }
 
     @Post()

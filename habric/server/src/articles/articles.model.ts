@@ -17,7 +17,7 @@ export class Articles extends Model {
     @Column({type: DataType.INTEGER, defaultValue: 0})
     watcher: number
 
-    @Column({type: DataType.STRING, defaultValue: '1.png'})
+    @Column({type: DataType.STRING, allowNull: true})
     image: string
 
     @Column({type: DataType.TEXT})

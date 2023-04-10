@@ -38,9 +38,10 @@ export const ArticlesPage = () => {
             </div>
           <div className='my-2 text-lg'><b>{article?.name}</b></div>
           <div className='text-xs mb-2'>{article?.tags}</div>
-          <pre>
-            {article?.text}
-          </pre>
+          <div>
+            <div className='flex justify-center'>{article?.image && <img className='w-max h-max' src={`http://localhost:5000/images/${article?.image}`}/>}</div>
+            <div className='whitespace-pre-line'>{article?.text}</div> 
+          </div>
         </div>
       </div>
       <div className='m-5 border-2 border-solid border-sky-900'>

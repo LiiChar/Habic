@@ -3,6 +3,7 @@ import { Module, forwardRef } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UsersController } from './users.controller';
 import { Users } from './users.model';
+import { FileModule } from 'src/file/file.module';
 
 
 @Module({

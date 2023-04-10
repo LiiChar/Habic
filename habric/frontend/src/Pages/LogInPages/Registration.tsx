@@ -1,17 +1,26 @@
 import React from 'react'
 import { Link, useNavigate } from 'react-router-dom';
 import { useCreateUsersMutation } from '../../Store/Slices/userSlice';
+import { ImageUpload } from '../../Components/articles/ImageUpload';
 
 export const Registration = () => {
   const [username, setUsername] = React.useState<string>('')
   const [password, setPassword] = React.useState<string>('')
   const [error, setError] = React.useState<string>('')
+  const [image, setImage] = React.useState<any>()
   const navigate = useNavigate()
   const [createUsers, {isSuccess, isError, data}] = useCreateUsersMutation()
 
   async function setLogin() {
+
     if (username !== '' && password !== '') {
-      const user: any = await createUsers({username: username, password: password})
+      const data = new FormData()
+      data.append('username', username)
+      data.append('password', password)
+      data.append('image', image)
+      console.log(data.get('image'));
+      
+      const user: any = await createUsers(data)
       if (user?.error?.data?.message) {
         setError(user?.error.data.message)
       }
@@ -45,6 +54,7 @@ export const Registration = () => {
             <button style={{ borderRadius: '4px' }} className='bg-cyan-500 hover:bg-cyan-700 p-2' onClick={setLogin}>Зарегестрироваться</button>
           </div>
           <div className='text-sm'>Усли у вас есть аккаунта? <Link className='font-bold' to={'/login'}>войдите</Link></div>
+          <ImageUpload setImage={setImage} />
         </div>
       </div>
     </div>
